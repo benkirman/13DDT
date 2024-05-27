@@ -3,9 +3,9 @@ from PIL import ImageTk, Image
 
 root = Tk()
 root.title("Learn to get images")
-root.iconbitmap('imgs/penicon.ico')
+root.iconbitmap('Flag.ico')
 
-my_img = Image.open('imgs/vikram.jpeg')
+my_img = Image.open('vikram.jpg')
 resized = my_img.resize((300, 225),Image.LANCZOS)
 new_pic = ImageTk.PhotoImage(resized)
 
