@@ -6,11 +6,11 @@ import subprocess
 root = Tk()
 root.title("Guess the Flag")
 root.iconbitmap('flag.ico')
-#root.attributes('-fullscreen', True)
+root.attributes('-fullscreen', True)
 
 flags = {
-    'italy.png': 'italy',
-    'ukraine.png': 'ukraine',
+    'italy.png': 'Italy',
+    'ukraine.png': 'Ukraine',
 }
 
 current_flag = 'italy.png'

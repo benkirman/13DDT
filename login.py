@@ -46,12 +46,12 @@ def register():
             messagebox.showinfo("", "Sign Up Successful")
             register_window.destroy()
 
-        Button(register_window, text="Sign Up", command=register_user, height=3, width=13).grid(row=2, column=0, columnspan=2, pady=10)
+    Button(register_window, text="Sign Up", command=register_user, height=3, width=13).grid(row=2, column=0, columnspan=2, pady=10)
 
 root = Tk()
 root.title("Login")
 root.iconbitmap("flag.ico")
-#root.attributes('-fullscreen', True)
+root.attributes('-fullscreen', True)
 
 root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(4, weight=1)
