@@ -3,20 +3,28 @@ from tkinter import *
 from tkinter import messagebox
 import subprocess
 
-users = {}
+conn = sqlite3.connect('users.db')
+c = conn.cursor()
+
+c.execute('''CREATE TABLE IF NOT EXISTS users
+             (username TEXT PRIMARY KEY, password TEXT)''')
+conn.commit()
 
 def Ok():
     uname = e1.get()
     password = e2.get()
-    
+
     if uname == "" or password == "":
         messagebox.showinfo("", "Blank Not allowed")
-    elif uname in users and users[uname] == password:
-        messagebox.showinfo("", "Login Success")
-        root.destroy()
-        subprocess.run(["python", "game.py"])
     else:
-        messagebox.showinfo("", "Incorrect Username/Password")
+        c.execute("SELECT * FROM users WHERE username=? AND password=?", (uname, password))
+        result = c.fetchone()
+        if result:
+            messagebox.showinfo("", "Login Success")
+            root.destroy()
+            subprocess.run(["python", "game.py"])
+        else:
+            messagebox.showinfo("", "Incorrect Username/Password")
 
 def register():
     register_window = Toplevel(root)
@@ -39,12 +47,14 @@ def register():
 
         if reg_uname == "" or reg_password == "":
             messagebox.showinfo("", "Blank not allowed")
-        elif reg_uname in users:
-            messagebox.showinfo("", "This username already exists")
         else:
-            users[reg_uname] = reg_password
-            messagebox.showinfo("", "Sign Up Successful")
-            register_window.destroy()
+            try:
+                c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (reg_uname, reg_password))
+                conn.commit()
+                messagebox.showinfo("", "Sign Up Successful")
+                register_window.destroy()
+            except sqlite3.IntegrityError:
+                messagebox.showinfo("", "This username already exists")
 
     Button(register_window, text="Sign Up", command=register_user, height=3, width=13).grid(row=2, column=0, columnspan=2, pady=10)
 
@@ -73,3 +83,4 @@ Button(root, text="Register", command=register, height=3, width=13).grid(row=3, 
 Button(root, text="Exit", command=root.destroy, height=3, width=13).grid(row=3, column=3, pady=10, padx=10)
 
 root.mainloop()
+conn.close()
