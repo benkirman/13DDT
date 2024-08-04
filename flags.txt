@@ -1,2 +1,0 @@
-italy.png,Italy
-ukraine.png,Ukraine
