@@ -3,6 +3,7 @@ from PIL import ImageTk, Image
 from tkinter import messagebox
 import subprocess
 import tkinter.ttk as ttk
+import random
 
 root = Tk()
 root.title("Guess the Flag")
@@ -216,59 +217,75 @@ current_flag_index = 0
 
 score = 0
 
+#shuffles flag list
+random.shuffle(flag_list)
+
  #function that updates the displayed flag
 def update_flag():
     global current_flag_index, my_img, new_pic
-    if current_flag_index < len(flag_list): #checks for flags
-        current_flag = flag_list[current_flag_index] #grabs flags
+    if current_flag_index < len(flag_list):  #checks for flags
+        current_flag = flag_list[current_flag_index]  #grabs flags
         my_img = Image.open(current_flag)
         resized = my_img.resize((500, 325), Image.LANCZOS)
         new_pic = ImageTk.PhotoImage(resized)
         my_label.config(image=new_pic)
-        result_label.config(text="")
         combo.set('')
     else:
         messagebox.showinfo("Game Over", f"Your final score is: {score}")
         root.destroy()
 
-#function that checks for the users guess
+#function that checks for the user's guess
 def check_guess():
     global score, current_flag_index
-    guess = combo.get().strip() #gets users guess from combobox
-    if guess == flags[flag_list[current_flag_index]]: #checks if the users guess is correct
+    guess = combo.get()  #gets user's guess from combobox
+    if guess == flags[flag_list[current_flag_index]]:  #checks if the user's guess is correct
         result_label.config(text="Correct!", fg="green")
         score += 1
-        current_flag_index += 1
-        update_flag()
     else:
         result_label.config(text="Incorrect!", fg="red")
     score_label.config(text=f"Score: {score}")
+    current_flag_index += 1
+    update_flag()
+
+#function to skip the current flag
+def skip_flag():
+    global current_flag_index
+    current_flag_index += 1
+    result_label.config(text="")
+    update_flag()
 
 #setup for displaying the flag
 my_img = Image.open(flag_list[current_flag_index])
 resized = my_img.resize((500, 325), Image.LANCZOS)
 new_pic = ImageTk.PhotoImage(resized)
 
-my_label = Label(root, image=new_pic)
-combo = ttk.Combobox(root, values=country_list, font=('Arial', 14)) #dropdown widget that allows user to select a country from the list
-combo.set('Select a country') #text dispalyed in combobox
-guess_button = Button(root, text="Guess", command=check_guess) 
-result_label = Label(root, text="", font=('Arial', 14))
-score_label = Label(root, text=f"Score: {score}", font=('Arial', 14))
-exit_button = Button(root, text="Exit", command=root.destroy)
+#widgets and buttons
+my_label = Label(root, image=new_pic, bg="#f0f0f0", bd=10, relief=RIDGE)
+combo = ttk.Combobox(root, values=country_list, font=('Arial', 16), state='readonly', justify=CENTER)
+combo.set("Select a country")
+combo.config(width=30)
+guess_button = Button(root, text="Guess", command=check_guess, font=('Arial', 14, 'bold'), bg="#4CAF50", fg="white", padx=20, pady=10)
+skip_button = Button(root, text="Skip", command=skip_flag, font=('Arial', 14, 'bold'), bg="#f44336", fg="white", padx=20, pady=10)
+result_label = Label(root, text="", font=('Arial', 18), bg="#f0f0f0")
+score_label = Label(root, text=f"Score: {score}", font=('Arial', 16, 'bold'), bg="#f0f0f0")
+exit_button = Button(root, text="Exit", command=root.destroy, font=('Arial', 14, 'bold'), bg="#9E9E9E", fg="white", padx=20, pady=10)
 
-#confirgues the grid layout
+#configures the grid layout
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
 root.grid_columnconfigure(2, weight=1)
 root.grid_rowconfigure(1, weight=1)
 
 #places the widgets of the grid layout
-score_label.grid(row=0, column=0, columnspan=3) 
+score_label.grid(row=0, column=0, columnspan=3, pady=20)
 my_label.grid(row=1, column=0, columnspan=3, pady=20)
-combo.grid(row=2, column=0, columnspan=3)
-guess_button.grid(row=3, column=1)
-exit_button.grid(row=3, column=2)
-result_label.grid(row=4, column=0, columnspan=3)
+combo.grid(row=2, column=0, columnspan=3, pady=20)
+guess_button.grid(row=3, column=1, pady=20)
+skip_button.grid(row=3, column=0, pady=20)
+exit_button.grid(row=3, column=2, pady=20)
+result_label.grid(row=4, column=0, columnspan=3, pady=20)
+
+#background colour
+root.configure(bg="#E3F2FD")
 
 root.mainloop()
