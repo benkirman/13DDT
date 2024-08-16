@@ -9,6 +9,7 @@ root = Tk()
 root.title("Guess the Flag")
 root.iconbitmap('flag.ico')
 root.attributes('-fullscreen', True)
+root.configure(bg="#E3F2FD")
 
 #dictionary that connects countries to their file names
 flags = {
@@ -237,12 +238,15 @@ def update_flag():
 #function that checks for the user's guess
 def check_guess():
     global score, current_flag_index
-    guess = combo.get()  #gets user's guess from combobox
-    if guess == flags[flag_list[current_flag_index]]:  #checks if the user's guess is correct
+    guess = combo.get()  #gets the user's guess from the combobox
+    correct_answer = flags[flag_list[current_flag_index]]  #gets the correct country name for the current flag
+    
+    if guess == correct_answer:  #checks if the user's guess is correct
         result_label.config(text="Correct!", fg="green")
         score += 1
     else:
-        result_label.config(text="Incorrect!", fg="red")
+        result_label.config(text=f"Incorrect! The correct answer is {correct_answer}.", fg="red")
+    
     score_label.config(text=f"Score: {score}")
     current_flag_index += 1
     update_flag()
@@ -284,8 +288,5 @@ guess_button.grid(row=3, column=1, pady=20)
 skip_button.grid(row=3, column=0, pady=20)
 exit_button.grid(row=3, column=2, pady=20)
 result_label.grid(row=4, column=0, columnspan=3, pady=20)
-
-#background colour
-root.configure(bg="#E3F2FD")
 
 root.mainloop()

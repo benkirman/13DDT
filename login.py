@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 import subprocess
 
+#setup of the database
 conn = sqlite3.connect('users.db')
 c = conn.cursor()
 
@@ -10,7 +11,8 @@ c.execute('''CREATE TABLE IF NOT EXISTS users
              (username TEXT PRIMARY KEY, password TEXT)''')
 conn.commit()
 
-def Ok():
+#function to login the user
+def login_user():
     uname = e1.get()
     password = e2.get()
 
@@ -26,6 +28,7 @@ def Ok():
         else:
             messagebox.showinfo("", "Incorrect Username/Password")
 
+#function to register the user
 def register():
     register_window = Toplevel(root)
     register_window.title("Sign Up")
@@ -58,6 +61,7 @@ def register():
 
     Button(register_window, text="Sign Up", command=register_user, height=3, width=13).grid(row=2, column=0, columnspan=2, pady=10)
 
+#main window setup
 root = Tk()
 root.title("Login")
 root.iconbitmap("flag.ico")
@@ -78,9 +82,11 @@ e2 = Entry(root)
 e2.grid(row=2, column=2, padx=10, pady=10)
 e2.config(show="*")
 
-Button(root, text="Login", command=Ok, height=3, width=13).grid(row=3, column=1, pady=10, padx=10)
+Button(root, text="Login", command=login_user, height=3, width=13).grid(row=3, column=1, pady=10, padx=10)
 Button(root, text="Register", command=register, height=3, width=13).grid(row=3, column=2, pady=10, padx=10)
 Button(root, text="Exit", command=root.destroy, height=3, width=13).grid(row=3, column=3, pady=10, padx=10)
+
+root.configure(bg="#E3F2FD")
 
 root.mainloop()
 conn.close()
